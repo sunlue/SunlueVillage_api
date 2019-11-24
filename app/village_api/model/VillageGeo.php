@@ -9,7 +9,7 @@ class VillageGeo extends Common {
     protected $schema = array(
         'id' => 'integer',
         'uniqid' => 'string',
-        'village_id' => 'integer',
+        'village_id' => 'string',
         'lang' => 'string',
         'lng' => 'decimal',
         'lat' => 'decimal',

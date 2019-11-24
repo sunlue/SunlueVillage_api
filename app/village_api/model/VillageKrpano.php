@@ -5,7 +5,7 @@ namespace app\village_api\model;
 use app\village_api\common\model\Common;
 use think\Model;
 
-class VillageScenic extends Common {
+class VillageKrpano extends Common {
 
     protected $pk = 'uniqid';
     protected $type = array(
@@ -14,18 +14,11 @@ class VillageScenic extends Common {
         'village_id' => 'string',
         'lang' => 'string',
         'name' => 'string',
-        'intro' => 'string',
         'content' => 'string',
         'lng' => 'float',
         'lat' => 'float',
         'thumbnail' => 'string',
-        'features' => 'string',
-        'visit_time' => 'float',
-        'season' => 'array',
-        'price' => 'float',
-        'level' => 'integer',
-        'open_time' => 'string',
-        'close_time' => 'string',
+        'link' => 'string',
         'create_time' => 'integer',
         'update_time' => 'integer',
         'delete_time' => 'integer'
@@ -36,26 +29,19 @@ class VillageScenic extends Common {
         'uniqid',
         'village_id',
         'name',
-        'intro',
         'content',
         'lang',
         'lng',
         'lat',
         'thumbnail',
-        'features',
-        'visit_time',
-        'season',
-        'price',
-        'level',
-        'open_time',
-        'close_time',
+        'link',
         'create_time',
         'update_time',
         'delete_time'
     ];
 
     public static function onBeforeInsert(Model $model) {
-        $uniqid = strtoupper(uniqid('village-scenic-'));
+        $uniqid = strtoupper(uniqid('village-krpano-'));
         $model->setAttr('uniqid', $uniqid);
         $model->setAttr('lang', input('get.lang', config('lang.default_lang')));
     }
@@ -73,7 +59,7 @@ class VillageScenic extends Common {
      * @throws \think\exception\DbException
      */
     public static function getList($where = array()) {
-        return VillageScenic::withoutField('delete_time')
+        return VillageKrpano::withoutField('delete_time')
             ->where($where)->cache(true, 10)
             ->where('lang', input('get.lang', config('lang.default_lang')))
             ->paginate(input('get.limit'))->toArray();
@@ -88,7 +74,7 @@ class VillageScenic extends Common {
      * @throws \think\exception\DbException
      */
     public static function getAll($where = array()) {
-        return VillageScenic::withoutField('delete_time')
+        return VillageKrpano::withoutField('delete_time')
             ->where('lang', input('get.lang', config('lang.default_lang')))
             ->where($where)->cache(true, 10)->select()->toArray();
     }
@@ -103,7 +89,7 @@ class VillageScenic extends Common {
      * @throws \think\exception\DbException
      */
     public static function getFind($where = array()) {
-        $data = VillageScenic::withTrashed()->withoutField('delete_time')
+        $data = VillageKrpano::withTrashed()->withoutField('delete_time')
             ->where('lang', input('get.lang', config('lang.default_lang')))
             ->where($where)->find();
         return $data ? $data->toArray() : [];

@@ -2,7 +2,7 @@
 
 namespace app\village_api\controller\assets;
 
-use app\assets\controller\upload\UploadHandle;
+use app\village_api\controller\assets\upload\UploadHandle;
 use think\facade\Db;
 
 class Upload {

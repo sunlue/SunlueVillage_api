@@ -11,7 +11,7 @@ class VillageRelics extends Common {
     protected $type = array(
         'id' => 'integer',
         'uniqid' => 'string',
-        'village_id' => 'integer',
+        'village_id' => 'string',
         'lang' => 'string',
         'name' => 'string',
         'excerpt' => 'string',

@@ -176,6 +176,14 @@ Route::group(function () {
             Route::get('read', 'village.scenic.read/index');
             Route::get('details', 'village.scenic.read/details');
         });
+        Route::group('krpano', function () {
+            Route::get('read', 'village.krpano.read/index');
+            Route::post('create', 'village.krpano.create/index');
+            Route::delete('delete', 'village.krpano.delete/index');
+            Route::put('update', 'village.krpano.update/index');
+            Route::get('read', 'village.krpano.read/index');
+            Route::get('details', 'village.krpano.read/details');
+        });
     });
 
     Route::group('plugin', function () {

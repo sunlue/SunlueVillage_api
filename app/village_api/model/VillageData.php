@@ -122,7 +122,7 @@ class VillageData extends Common {
      */
     public static function getList($where = array()) {
         return VillageData::withoutField('delete_time')
-            ->where($where)
+            ->where($where)->cache(true, 10)
             ->where('lang', input('get.lang', config('lang.default_lang')))
             ->order('sort', 'desc')->order('create_time', 'asc')
             ->paginate(input('get.limit'))
@@ -130,14 +130,14 @@ class VillageData extends Common {
                 //取属性
                 $item['attr_text'] = $item['attribute'] == 1 ? '行政村' : '自然村';
                 //取行政区域
-                $region = CommonRegion::getParents($item['region']);
+                $region = CommonRegion::getParents($item['village']);
                 $data = array_column($region, 'label');
                 $item['region_text'] = implode(array_reverse($data), '/');
                 //取民族
                 $where[] = ['value', 'in', $item['nation']];
                 $item['nation_text'] = CommonNation::getLabel($where);
                 //取乡镇
-                $item['town'] = CommonRegion::getTown($item['region']);
+                $item['town_text'] = CommonRegion::getTown($item['village']);
                 //取类型
                 $type = VillageDataTypeJoin::getAll(array(
                     'data' => $item['uniqid']
@@ -145,7 +145,7 @@ class VillageData extends Common {
                 if (!empty($type)) {
                     $map[] = ['uniqid', 'in', array_column($type, 'type')];
                     $typeArr = VillageType::getAll($map);
-                    $item['type'] = $typeArr?array_column($typeArr,'name'):[];
+                    $item['type'] = $typeArr ? array_column($typeArr, 'name') : [];
                 }
             })->toArray();
     }
@@ -167,14 +167,14 @@ class VillageData extends Common {
                 //取属性
                 $item['type_text'] = $item['type'] == 1 ? '行政村' : '自然村';
                 //取行政区域
-                $region = CommonRegion::getParents($item['region']);
+                $region = CommonRegion::getParents($item['village']);
                 $data = array_column($region, 'label');
                 $item['region_text'] = implode(array_reverse($data), '/');
                 //取民族
                 $where[] = ['value', 'in', $item['nation']];
                 $item['nation_text'] = CommonNation::getLabel($where);
                 //取乡镇
-                $item['town'] = CommonRegion::getTown($item['region']);
+                $item['town_text'] = CommonRegion::getTown($item['village']);
                 //取类型
                 $type = VillageDataTypeJoin::getAll(array(
                     'data' => $item['uniqid']
@@ -182,7 +182,7 @@ class VillageData extends Common {
                 if (!empty($type)) {
                     $map[] = ['uniqid', 'in', array_column($type, 'type')];
                     $typeArr = VillageType::getAll($map);
-                    $item['type'] = $typeArr?array_column($typeArr,'name'):[];
+                    $item['type'] = $typeArr ? array_column($typeArr, 'name') : [];
                 }
             })->toArray();
     }
@@ -199,14 +199,14 @@ class VillageData extends Common {
     public static function getFind($where = array()) {
         $data = VillageData::withTrashed()->withoutField('delete_time')
             ->where('lang', input('get.lang', config('lang.default_lang')))
-            ->where($where)->find();
+            ->where($where)->cache(true, 10)->find();
         if (empty($data)) {
             return [];
         }
         //取属性
         $item['attr_text'] = $data['type'] == 1 ? '行政村' : '自然村';
         //取行政区域
-        $region = CommonRegion::getParents($data['region']);
+        $region = CommonRegion::getParents($data['village']);
         $region = array_column($region, 'value');
         sort($region);
         $data['region_text'] = $region;
@@ -214,7 +214,7 @@ class VillageData extends Common {
         $nation[] = ['value', 'in', $data['nation']];
         $data['nation_text'] = CommonNation::getLabel($nation);
         //取乡镇
-        $data['town'] = CommonRegion::getTown($data['region']);
+        $data['town_text'] = CommonRegion::getTown($data['village']);
         //取类型
         $type = VillageDataTypeJoin::getAll(array(
             'data' => $data['uniqid']
@@ -222,7 +222,7 @@ class VillageData extends Common {
         if (!empty($type)) {
             $map[] = ['uniqid', 'in', array_column($type, 'type')];
             $typeArr = VillageType::getAll($map);
-            $data['type'] = $typeArr?array_column($typeArr,'name'):[];
+            $data['type'] = $typeArr ? array_column($typeArr, 'name') : [];
         }
         return $data ? $data->toArray() : [];
     }
