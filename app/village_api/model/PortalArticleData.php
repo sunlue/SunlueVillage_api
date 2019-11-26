@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\village_api\model;
-
 
 use app\village_api\common\model\Common;
 use think\Model;
@@ -15,6 +13,7 @@ class PortalArticleData extends Common {
         'lang' => 'string',
         'uniqid' => 'string',
         'title' => 'string',
+        'region' => 'string',
         'village_id' => 'string',
         'type' => 'string',
         'excerpt' => 'string',
@@ -50,6 +49,7 @@ class PortalArticleData extends Common {
         'uniqid',
         'lang',
         'title',
+        'region',
         'village_id',
         'type',
         'excerpt',
@@ -93,7 +93,11 @@ class PortalArticleData extends Common {
     }
 
     public function setVillageIdAttr($value) {
-        return is_array($value) ? $value[0]:'';
+        return $value && is_array($value) ? $value[0] : '';
+    }
+
+    public function setRegionAttr($value) {
+        return $value && is_array($value) ? $value[count($value)-1] : '';
     }
 
     public function setTagAttr($value) {
@@ -108,13 +112,14 @@ class PortalArticleData extends Common {
      * 查询列表
      * @param array $where
      * @return array
+     * @throws \think\db\exception\DbException
      * @throws \think\exception\DbException
      */
     public static function getList($where = array()) {
         return PortalArticleData::withoutField('delete_time')
             ->where($where)->cache(true, 10)
-            ->where('lang',input('get.lang', config('lang.default_lang')))
-            ->order('sort','desc')->order('create_time','asc')
+            ->where('lang', input('get.lang', config('lang.default_lang')))
+            ->order('sort', 'desc')->order('create_time', 'asc')
             ->paginate(input('get.limit'))
             ->each(function ($item) {
                 $articleType = PortalArticleType::getFind(array(
@@ -129,19 +134,20 @@ class PortalArticleData extends Common {
      * @param array $where
      * @return array
      * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
     public static function getAll($where = array()) {
         return PortalArticleData::withoutField('delete_time')
             ->where($where)->cache(true, 10)
-            ->order('sort','desc')->order('create_time','asc')
-            ->where('lang',input('get.lang', config('lang.default_lang')))
+            ->order('sort', 'desc')->order('create_time', 'asc')
+            ->where('lang', input('get.lang', config('lang.default_lang')))
             ->select()->each(function ($item) {
                 $articleType = PortalArticleType::getFind(array(
                     'uniqid' => $item['type']
                 ));
-                $item['type_text'] = $articleType['name'];
+                $item['type_text'] = $articleType ? $articleType['name'] : '';
             })->toArray();
     }
 
@@ -151,13 +157,33 @@ class PortalArticleData extends Common {
      * @return array
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
     public static function getFind($where = array()) {
         $data = PortalArticleData::withTrashed()->withoutField('delete_time')
-            ->where('lang',input('get.lang', config('lang.default_lang')))
+            ->where('lang', input('get.lang', config('lang.default_lang')))
             ->where($where)->find();
+
+        $articleType = PortalArticleType::getFind(array(
+            'uniqid' => $data['type']
+        ));
+        $data['type_text'] = $articleType ? $articleType['name'] : '';
+        return $data ? $data->toArray() : [];
+    }
+
+    public static function getPrev($id) {
+        $where[] = ['id', '<', $id];
+        $maxId = PortalArticleData::where($where)->max('id');
+        $data = PortalArticleData::where(['id' => $maxId])->find();
+        return $data ? $data->toArray() : [];
+    }
+
+    public static function getNext($id) {
+        $where[] = ['id', '>', $id];
+        $minId = PortalArticleData::where($where)->min('id');
+        $data = PortalArticleData::where(['id' => $minId])->find();
         return $data ? $data->toArray() : [];
     }
 

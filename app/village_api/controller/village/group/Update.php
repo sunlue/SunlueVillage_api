@@ -1,12 +1,12 @@
 <?php
 
 
-namespace app\village_api\controller\portal\article\data;
+namespace app\village_api\controller\village\group;
 
-use app\village_api\validate\ArticleData;
+use app\village_api\validate\VillageGroup;
 use think\exception\ValidateException;
 
-class Update extends Data {
+class Update extends Group {
     public function initialize() {
         parent::_init();
     }
@@ -19,7 +19,7 @@ class Update extends Data {
      */
     protected function dataValidate($data = array(), $scene = 'update') {
         try {
-            validate(ArticleData::class)->scene($scene)->check($data);
+            validate(VillageGroup::class)->scene($scene)->check($data);
         } catch (ValidateException $e) {
             $this->ajaxReturn(400, $e->getError());
         }
@@ -29,22 +29,11 @@ class Update extends Data {
         $param = input('put.');
         if (isset($param['field']) && isset($param['value'])) {
             $this->dataValidate($param, 'field');
-            parent::updateAericleField($param['uniqid'], $param['field'], $param['value']);
+            parent::updateField($param['uniqid'], $param['field'], $param['value']);
         } else {
             $this->dataValidate($param);
             parent::update($param['uniqid'], $param);
         }
     }
 
-    public function like(){
-        $param = input('put.');
-        $this->dataValidate($param,'like');
-        parent::setLike($param['uniqid']);
-    }
-
-    public function hits(){
-        $param = input('put.');
-        $this->dataValidate($param,'like');
-        parent::setHits($param['uniqid']);
-    }
 }

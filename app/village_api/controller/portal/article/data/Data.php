@@ -97,6 +97,19 @@ class Data extends eVillageApi {
         }
     }
 
+    /**
+     * 点赞
+     * @param $uniqid
+     */
+    protected function setHits($uniqid){
+        try {
+            $this->model->where('uniqid',$uniqid)->inc('hits')->update();
+            $this->ajaxReturn(200);
+        } catch (\exception $e) {
+            $this->ajaxReturn(400, $e->getMessage());
+        }
+    }
+
 
     /**
      * 获取文章数据

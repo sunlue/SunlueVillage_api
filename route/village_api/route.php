@@ -67,7 +67,9 @@ Route::group(function () {
                 Route::delete('delete', 'portal.article.data.delete/index');
                 Route::put('update', 'portal.article.data.update/index');
                 Route::put('like', 'portal.article.data.update/like');
+                Route::put('hits', 'portal.article.data.update/hits');
                 Route::get('read', 'portal.article.data.read/index');
+                Route::get('details', 'portal.article.data.read/details');
             });
             Route::group('page', function () {
                 Route::post('create', 'portal.article.page.create/index');
@@ -183,6 +185,20 @@ Route::group(function () {
             Route::put('update', 'village.krpano.update/index');
             Route::get('read', 'village.krpano.read/index');
             Route::get('details', 'village.krpano.read/details');
+        });
+        Route::group('slide', function () {
+            Route::post('create', 'village.slide.create/index');
+            Route::delete('delete', 'village.slide.delete/index');
+            Route::put('update', 'village.slide.update/index');
+            Route::get('read', 'village.slide.read/index');
+        });
+        Route::group('group', function () {
+            Route::get('read', 'village.group.read/index');
+            Route::post('create', 'village.group.create/index');
+            Route::delete('delete', 'village.group.delete/index');
+            Route::put('update', 'village.group.update/index');
+            Route::get('read', 'village.group.read/index');
+            Route::get('details', 'village.group.read/details');
         });
     });
 

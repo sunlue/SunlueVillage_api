@@ -3,6 +3,8 @@
 
 namespace app\village_api\controller\portal\article\data;
 
+use app\village_api\model\PortalArticleData;
+
 class Read extends Data {
     public function initialize() {
         parent::_init();
@@ -16,9 +18,9 @@ class Read extends Data {
     protected function searchWhere($param = array(), $callback = '') {
         $where = array();
         if (!empty($param['type'])) {
-            if (is_array($param['type'])){
+            if (is_array($param['type'])) {
                 $where[] = ['type', 'in', $param['type']];
-            }else{
+            } else {
                 $where[] = ['type', '=', $param['type']];
             }
         }
@@ -52,4 +54,19 @@ class Read extends Data {
         $where = $this->searchWhere($param);
         parent::read($where);
     }
+
+    public function details() {
+        $uniqid = input('get.uniqid');
+        if (empty($uniqid)) {
+            $this->ajaxReturn(400, lang('UNIQID_EMPTY'));
+        }
+        $data = PortalArticleData::getFind(['uniqid' => $uniqid]);
+        $data['prev']=PortalArticleData::getPrev($data['id']);
+        $data['next']=PortalArticleData::getNext($data['id']);
+        $this->ajaxReturn(200, $data);
+    }
 }
+
+
+
+

@@ -29,6 +29,7 @@ class VillageData extends Common {
         'domain_area' => 'string',
         'village_area' => 'string',
         'content' => 'string',
+        'tour' => 'string',
         'industry' => 'string',
         'audio' => 'string',
         'video' => 'string',
@@ -72,6 +73,7 @@ class VillageData extends Common {
         'domain_area',
         'village_area',
         'content',
+        'tour',
         'industry',
         'audio',
         'video',
@@ -142,6 +144,11 @@ class VillageData extends Common {
                 $type = VillageDataTypeJoin::getAll(array(
                     'data' => $item['uniqid']
                 ));
+                //取坐标
+                $coord = VillageGeo::getFind(array(
+                    'village_id' => $item['uniqid']
+                ));
+                $item['coord']=$coord?['lat'=>$coord['lat'],'lng'=>$coord['lng']]:['lat'=>'','lng'=>''];
                 if (!empty($type)) {
                     $map[] = ['uniqid', 'in', array_column($type, 'type')];
                     $typeArr = VillageType::getAll($map);
@@ -179,6 +186,11 @@ class VillageData extends Common {
                 $type = VillageDataTypeJoin::getAll(array(
                     'data' => $item['uniqid']
                 ));
+                //取坐标
+                $coord = VillageGeo::getFind(array(
+                    'village_id' => $item['uniqid']
+                ));
+                $item['coord']=$coord?['lat'=>$coord['lat'],'lng'=>$coord['lng']]:['lat'=>'','lng'=>''];
                 if (!empty($type)) {
                     $map[] = ['uniqid', 'in', array_column($type, 'type')];
                     $typeArr = VillageType::getAll($map);
@@ -224,6 +236,11 @@ class VillageData extends Common {
             $typeArr = VillageType::getAll($map);
             $data['type'] = $typeArr ? array_column($typeArr, 'name') : [];
         }
+        //取坐标
+        $coord = VillageGeo::getFind(array(
+            'village_id' => $data['uniqid']
+        ));
+        $data['coord']=$coord?['lat'=>$coord['lat'],'lng'=>$coord['lng']]:['lat'=>'','lng'=>''];
         return $data ? $data->toArray() : [];
     }
 
