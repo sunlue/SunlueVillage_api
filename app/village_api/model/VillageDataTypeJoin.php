@@ -28,7 +28,7 @@ class VillageDataTypeJoin extends Common {
 
     public static function onBeforeInsert(Model $model) {
         $uniqid = strtoupper(uniqid('village-data-type-'));
-        $model->setAttr('uniqid',$uniqid);
+        $model->setAttr('uniqid', $uniqid);
         $model->setAttr('lang', input('get.lang', config('lang.default_lang')));
     }
 
@@ -40,7 +40,7 @@ class VillageDataTypeJoin extends Common {
      */
     public static function getList($where = array()) {
         return VillageDataTypeJoin::withoutField('delete_time')
-            ->where('lang',input('get.lang', config('lang.default_lang')))
+            ->where('lang', input('get.lang', config('lang.default_lang')))
             ->where($where)->cache(true, 10)->paginate(input('get.limit'))
             ->toArray();
     }
@@ -55,7 +55,7 @@ class VillageDataTypeJoin extends Common {
      */
     public static function getAll($where = array()) {
         return VillageDataTypeJoin::withoutField('delete_time')
-            ->where('lang',input('get.lang', config('lang.default_lang')))
+            ->where('lang', input('get.lang', config('lang.default_lang')))
             ->where($where)->cache(true, 10)->select()->toArray();
     }
 
@@ -70,9 +70,18 @@ class VillageDataTypeJoin extends Common {
      */
     public static function getFind($where = array()) {
         $data = VillageDataTypeJoin::withTrashed()->field('uniqid,data,type')
-            ->where('lang',input('get.lang', config('lang.default_lang')))
+            ->where('lang', input('get.lang', config('lang.default_lang')))
             ->where($where)->find();
         return $data ? $data->toArray() : [];
+    }
+
+    public static function getTypeSearch($where = array()) {
+        $count = count($where[0][2]) > 1 ? count($where[0][2]) - 1 : 0;
+        $data = VillageDataTypeJoin::withoutField('delete_time')
+            ->where('lang', input('get.lang', config('lang.default_lang')))
+            ->group('`data`')->having('count(data)>' . $count)
+            ->where($where)->select()->toArray();
+        return $data;
     }
 
 }

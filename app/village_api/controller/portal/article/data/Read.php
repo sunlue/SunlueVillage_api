@@ -61,8 +61,12 @@ class Read extends Data {
             $this->ajaxReturn(400, lang('UNIQID_EMPTY'));
         }
         $data = PortalArticleData::getFind(['uniqid' => $uniqid]);
-        $data['prev']=PortalArticleData::getPrev($data['id']);
-        $data['next']=PortalArticleData::getNext($data['id']);
+        if ($data){
+            $data['prev']=PortalArticleData::getPrev($data['id']);
+            $data['next']=PortalArticleData::getNext($data['id']);
+            $data['like']=$data['like']+1;
+            PortalArticleData::where('uniqid',$uniqid)->inc('hits')->update();
+        }
         $this->ajaxReturn(200, $data);
     }
 }

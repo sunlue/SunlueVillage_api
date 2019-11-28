@@ -3,7 +3,7 @@
 
 namespace app\village_api\controller\village\slide;
 
-use app\village_api\validate\PortalSlide;
+use app\village_api\validate\VillageSlide;
 use think\exception\ValidateException;
 
 class Delete extends Slide {
@@ -18,7 +18,7 @@ class Delete extends Slide {
      */
     protected function dataValidate($data = array()) {
         try {
-            validate(PortalSlide::class)->scene('delete')->check($data);
+            validate(VillageSlide::class)->scene('delete')->check($data);
         } catch (ValidateException $e) {
             $this->ajaxReturn(400, $e->getError());
         }

@@ -22,7 +22,7 @@ class Read extends Village {
         if (!empty($param['type'])) {
             if (is_array($param['type'])) {
                 $map[] = ['type', 'in', $param['type']];
-                $type = VillageDataTypeJoin::getAll($map);
+                $type = VillageDataTypeJoin::getTypeSearch($map);
             } else {
                 $type = VillageDataTypeJoin::getAll(['type' => $param['type']]);
             }
@@ -54,6 +54,9 @@ class Read extends Village {
             $this->ajaxReturn(400, lang('UNIQID_EMPTY'));
         }
         $data = VillageData::getFind(['uniqid' => $uniqid]);
+        if ($data) {
+            VillageData::where('uniqid', $uniqid)->inc('hits')->update();
+        }
         $this->ajaxReturn(200, $data);
     }
 }

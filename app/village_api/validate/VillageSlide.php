@@ -6,7 +6,7 @@ use think\Validate;
 
 class VillageSlide extends Validate {
     protected $rule = [
-        'uniqid' => 'require|uniques',
+        'uniqid' => 'require',
         'name' => 'require',
         'image' => 'require',
         'sign' => 'max:100',

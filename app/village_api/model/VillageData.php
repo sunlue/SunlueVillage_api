@@ -13,7 +13,11 @@ class VillageData extends Common {
         'uniqid' => 'string',
         'lang' => 'string',
         'thumbnail' => 'string',
-        'region' => 'string',
+        'province' => 'string',
+        'city' => 'string',
+        'county' => 'string',
+        'town' => 'string',
+        'village' => 'string',
         'name' => 'string',
         'attribute' => 'integer',
         'registered_population' => 'integer',
@@ -57,7 +61,11 @@ class VillageData extends Common {
         'uniqid',
         'lang',
         'thumbnail',
-        'region',
+        'province',
+        'city',
+        'county',
+        'town',
+        'village',
         'name',
         'attribute',
         'registered_population',
@@ -148,7 +156,7 @@ class VillageData extends Common {
                 $coord = VillageGeo::getFind(array(
                     'village_id' => $item['uniqid']
                 ));
-                $item['coord']=$coord?['lat'=>$coord['lat'],'lng'=>$coord['lng']]:['lat'=>'','lng'=>''];
+                $item['coord'] = $coord ? ['lat' => $coord['lat'], 'lng' => $coord['lng']] : ['lat' => '', 'lng' => ''];
                 if (!empty($type)) {
                     $map[] = ['uniqid', 'in', array_column($type, 'type')];
                     $typeArr = VillageType::getAll($map);
@@ -190,7 +198,7 @@ class VillageData extends Common {
                 $coord = VillageGeo::getFind(array(
                     'village_id' => $item['uniqid']
                 ));
-                $item['coord']=$coord?['lat'=>$coord['lat'],'lng'=>$coord['lng']]:['lat'=>'','lng'=>''];
+                $item['coord'] = $coord ? ['lat' => $coord['lat'], 'lng' => $coord['lng']] : ['lat' => '', 'lng' => ''];
                 if (!empty($type)) {
                     $map[] = ['uniqid', 'in', array_column($type, 'type')];
                     $typeArr = VillageType::getAll($map);
@@ -240,7 +248,7 @@ class VillageData extends Common {
         $coord = VillageGeo::getFind(array(
             'village_id' => $data['uniqid']
         ));
-        $data['coord']=$coord?['lat'=>$coord['lat'],'lng'=>$coord['lng']]:['lat'=>'','lng'=>''];
+        $data['coord'] = $coord ? ['lat' => $coord['lat'], 'lng' => $coord['lng']] : ['lat' => '', 'lng' => ''];
         return $data ? $data->toArray() : [];
     }
 

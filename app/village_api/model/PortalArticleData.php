@@ -97,7 +97,7 @@ class PortalArticleData extends Common {
     }
 
     public function setRegionAttr($value) {
-        return $value && is_array($value) ? $value[count($value)-1] : '';
+        return $value && is_array($value) ? $value[count($value) - 1] : '';
     }
 
     public function setTagAttr($value) {
@@ -165,11 +165,12 @@ class PortalArticleData extends Common {
         $data = PortalArticleData::withTrashed()->withoutField('delete_time')
             ->where('lang', input('get.lang', config('lang.default_lang')))
             ->where($where)->find();
-
-        $articleType = PortalArticleType::getFind(array(
-            'uniqid' => $data['type']
-        ));
-        $data['type_text'] = $articleType ? $articleType['name'] : '';
+        if ($data) {
+            $articleType = PortalArticleType::getFind(array(
+                'uniqid' => $data['type']
+            ));
+            $data['type_text'] = $articleType ? $articleType['name'] : '';
+        }
         return $data ? $data->toArray() : [];
     }
 

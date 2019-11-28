@@ -23,6 +23,9 @@ class Read extends Slide {
         if (!empty($param['uniqid'])) {
             $where[] = ['uniqid', '=', $param['uniqid']];
         }
+        if (!empty($param['village_id'])) {
+            $where[] = ['village_id', '=', $param['village_id']];
+        }
         if ($callback instanceof \Closure) {
             $callback($where);
         } else {

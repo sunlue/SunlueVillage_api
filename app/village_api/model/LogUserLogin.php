@@ -32,7 +32,7 @@ class LogUserLogin extends Model {
         $sql = LogUserLogin::alias('a')
             ->field('a.uniqid,c.uniqid as userid,a.ip,a.login_time,a.exit_time,
             IFNULL(b.name, \'\') as name,IFNULL(b.nickname,\'\') as nickname,
-            c.account,c.mobile')
+            c.account,c.mobile')->order('login_time','desc')
             ->join('user_info b', 'a.userid=b.uniqid', 'left')
             ->join('user_account c','a.userid=c.uniqid','left');
         if (!$isManage) {
